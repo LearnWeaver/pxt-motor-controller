@@ -1,0 +1,19 @@
+{
+    "name": "pxt-bbs-motor-controller",
+    "version": "0.0.2",
+    "description": "Blocks for driving the BBS Motor Driver",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "motorcontroller.ts",
+        "shims.d.ts",
+        "enums.d.ts"       
+    ],
+    "testFiles": [
+        "tests.ts"
+    ],
+    "public": true
+}
