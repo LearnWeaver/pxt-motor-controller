@@ -1,6 +1,6 @@
 {
     "name": "pxt-bbs-motor-controller",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Blocks for driving the BBS Motor Driver",
     "license": "MIT",
     "dependencies": {

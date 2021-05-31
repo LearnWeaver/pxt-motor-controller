@@ -132,17 +132,17 @@ namespace BBS_Motor_Controller {
         }
 
         /**
-         * sets the requested motor to the given speed.
+         * Sets the requested motor to the given speed.
          * if the PCA has not yet been initialised calls the initialisation routine
          *
-         * @param Motor Which servo to set
+         * @param Motor Which motor to set
          * @param speed the angle to set the servo to
          */
         //% blockId=bbs_I2Cmotor_write
         //% block="set%Motor|to%speed"
         //% speed.min=0 speed.max=100
         
-        export function MotorWrite(Motors: Motor, speed: number): void {
+        export function MotorWrite(Motor: Motors, speed: number): void {
             if (initalised == false) {
                 secretIncantation()
             }
