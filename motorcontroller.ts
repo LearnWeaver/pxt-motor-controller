@@ -146,7 +146,7 @@ namespace BBS_Motor_Controller {
          */
         //% blockId=bbs_I2Cmotor_write
         //% block="set%Motor|to%speed"
-        //% speed.min=0 speed.max=100
+        //% speed.min=-100 speed.max=100
         
         export function MotorWrite(Motor: Motors, speed: number): void {
             if (initalised == false) {
