@@ -20,8 +20,10 @@ namespace BBS_Motor_Controller {
     
         //nice big list of servos for the block to use. These represent register offsets in the PCA9865
         export enum Servos {
-            Servo1 = 0x08,
-            Servo2 = 0x0C/*,
+            Servo1 = 0x40,
+            Servo2 = 0x44
+            /*Servo1 = 0x08,
+            Servo2 = 0x0C,
             Servo3 = 0x10,
             Servo4 = 0x14,
             Servo5 = 0x18,
@@ -39,10 +41,14 @@ namespace BBS_Motor_Controller {
         }
 
         export enum Motors {
-            Motor1 = 0x08,
+            Motor1 = 1,
+            Motor2 = 2,
+            Motor3 = 3,
+            Motor4 = 4
+            /*Motor1 = 0x08,
             Motor2 = 0x0C,
             Motor3 = 0x10,
-            Motor4 = 0x14/*,
+            Motor4 = 0x14,
             Servo5 = 0x18,
             Servo6 = 0x1C,
             Servo7 = 0x20,
@@ -146,25 +152,116 @@ namespace BBS_Motor_Controller {
             if (initalised == false) {
                 secretIncantation()
             }
-            let buf = pins.createBuffer(2)
-            let HighByte = false
+
+            //need to look at the speed and motor number to determine the pins to activate.
+            let m1pin1 = 0;
+            let m1pin2 = 0;
+            let m1pwm = 0;
+            
+            if(Motor == Motors.Motor1){
+                m1pin1 = 0x08;
+                m1pin2 = 0x0C;
+                m1pwm = 0x10;
+            }
+
+            if(Motor == Motors.Motor2){
+                m1pin1 = 0x14;
+                m1pin2 = 0x18;
+                m1pwm = 0x1C;
+            }
+
+            if(Motor == Motors.Motor3){
+                m1pin1 = 0x20;
+                m1pin2 = 0x24;
+                m1pwm = 0x28;
+            }
+
+            if(Motor == Motors.Motor4){
+                m1pin1 = 0x2C;
+                m1pin2 = 0x30;
+                m1pwm = 0x34;
+            }
+            
+            let buf = pins.createBuffer(2);
+            let bufPin1 = pins.createBuffer(2);
+            let bufPin2 = pins.createBuffer(2);
+
+            let HighByte = false;
+            
+            //power up pin 1 and 2
+            if(speed > 0)
+            {
+                //forward
+                bufPin1[0] = m1pin1;
+                bufPin1[1] = 0xFF; //full on to simulate a logic on
+                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)            
+                bufPin1[0] = m1pin1 + 1
+                bufPin1[1] = 0x00
+                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)
+
+                bufPin2[0] = m1pin2;
+                bufPin2[1] = 0; //off - 
+                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)            
+                bufPin2[0] = m1pin2 + 1
+                bufPin2[1] = 0x00
+                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)
+
+
+            }
+            else if (speed < 0)
+            {
+                //reverse
+
+                bufPin1[0] = m1pin1;
+                bufPin1[1] = 0; //full off
+                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)            
+                bufPin1[0] = m1pin1 + 1
+                bufPin1[1] = 0x00
+                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)
+
+                bufPin2[0] = m1pin2;
+                bufPin2[1] = 0xFF; //on
+                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)            
+                bufPin2[0] = m1pin2 + 1
+                bufPin2[1] = 0x00
+                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)
+            }
+            else
+            {
+                //stop
+                bufPin1[0] = m1pin1;
+                bufPin1[1] = 0xFF; //full off
+                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)            
+                bufPin1[0] = m1pin1 + 1
+                bufPin1[1] = 0x00
+                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)
+
+                bufPin2[0] = m1pin2;
+                bufPin2[1] = 0xFF; //on
+                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)            
+                bufPin2[0] = m1pin2 + 1
+                bufPin2[1] = 0x00
+                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)
+            }
+
             let deg100 = speed * 100
             let PWMVal100 = deg100 * ServoMultiplier
             let PWMVal = PWMVal100 / 10000
             PWMVal = Math.floor(PWMVal)
             PWMVal = PWMVal + ServoZeroOffset
+            
             if (PWMVal > 0xFF) {
                 HighByte = true
             }
-            buf[0] = Motor
+            buf[0] = m1pwm
             buf[1] = PWMVal
             pins.i2cWriteBuffer(ChipAddress, buf, false)
             if (HighByte) {
-                buf[0] = Motor + 1
+                buf[0] = m1pwm + 1
                 buf[1] = 0x01
             }
             else {
-                buf[0] = Motor + 1
+                buf[0] = m1pwm + 1
                 buf[1] = 0x00
             }
             pins.i2cWriteBuffer(ChipAddress, buf, false)
