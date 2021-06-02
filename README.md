@@ -3,7 +3,7 @@
 Custom blocks for BBS Motor Driver for micro:bit. 
 See website for example code.
 
-![](https://raw.githubusercontent.com/LearnWeaver/pxt-bbs-motor-controller/main/icon.png)
+![](https://raw.githubusercontent.com/LearnWeaver/pxt-motor-controller/master/icon.png)
 
 
 
