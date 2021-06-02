@@ -408,7 +408,7 @@ namespace BBS_Motor_Controller {
                 pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
                 i2cData[0] = SERVOS + m1pin2*4 + 3;	// 
-                i2cData[1] = (4096) >> 8);		// 
+                i2cData[1] = (4096 >> 8);		// 
                 pins.i2cWriteBuffer(ChipAddress, i2cData, false);
                 
             }
@@ -429,18 +429,18 @@ namespace BBS_Motor_Controller {
                 pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
                 i2cData[0] = SERVOS + m1pin2*4 + 3;	// 
-                i2cData[1] = (4096) >> 8);		// 
+                i2cData[1] = (4096 >> 8);		// 
                 pins.i2cWriteBuffer(ChipAddress, i2cData, false);
             }
 
             
             //pwm pin
 
-            i2cData[0] = SERVOS + m1pin1*4 + 2;	// 
+            i2cData[0] = SERVOS + m1pwm*4 + 2;	// 
             i2cData[1] = (speed & 0xff);		// 
             pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
-            i2cData[0] = SERVOS + m1pin1*4 + 3;	// 
+            i2cData[0] = SERVOS + m1pwm*4 + 3;	// 
             i2cData[1] = (speed >> 8);		// 
             pins.i2cWriteBuffer(ChipAddress, i2cData, false);
         }
