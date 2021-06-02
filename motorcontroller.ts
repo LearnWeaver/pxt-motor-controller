@@ -117,7 +117,7 @@ namespace BBS_Motor_Controller {
         {
            
             setServo(Servos.Servo1, 0);
-            etServo(Servos.Servo2, 0);
+            setServo(Servos.Servo2, 0);
         }
 
         /**
