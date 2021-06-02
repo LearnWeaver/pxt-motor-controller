@@ -342,27 +342,27 @@ namespace BBS_Motor_Controller {
             let m1pwm = 0;
             
             if(Motor == Motors.Motor1){
-                m1pin1 = 1;
-                m1pin2 = 2;
-                m1pwm = 3;
+                m1pin1 = 0;
+                m1pin2 = 1;
+                m1pwm = 2;
             }
 
             if(Motor == Motors.Motor2){
-                m1pin1 = 4;
-                m1pin2 = 5;
-                m1pwm = 6;
+                m1pin1 = 3;
+                m1pin2 = 4;
+                m1pwm = 5;
             }
 
             if(Motor == Motors.Motor3){
-                m1pin1 = 7;
-                m1pin2 = 8;
-                m1pwm = 9;
+                m1pin1 = 6;
+                m1pin2 = 7;
+                m1pwm = 8;
             }
 
             if(Motor == Motors.Motor4){
-                m1pin1 = 10;
-                m1pin2 = 11;
-                m1pwm = 12;
+                m1pin1 = 9;
+                m1pin2 = 10;
+                m1pwm = 11;
             }
             
             let i2cData = pins.createBuffer(2);
@@ -432,6 +432,26 @@ namespace BBS_Motor_Controller {
                 i2cData[1] = (4096 >> 8);		// 
                 pins.i2cWriteBuffer(ChipAddress, i2cData, false);
             }
+
+            //enable pins on.
+
+            i2cData[0] = SERVOS + 12*4 + 2;	// 
+            i2cData[1] = (4096 & 0xff);		// 
+            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+            i2cData[0] = SERVOS + 12*4 + 3;	// 
+            i2cData[1] = (4096 >> 8);		// 
+            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+
+            i2cData[0] = SERVOS + 13*4 + 2;	// 
+            i2cData[1] = (4096 & 0xff);		// 
+            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+            i2cData[0] = SERVOS + 13*4 + 3;	// 
+            i2cData[1] = (4096 >> 8);		// 
+            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
 
             
             //pwm pin
