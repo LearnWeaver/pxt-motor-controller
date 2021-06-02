@@ -132,7 +132,7 @@ namespace BBS_Motor_Controller {
         {
             let servoNumber = 15;
             if(servo == Servos.Servo2){
-                servoNumber = 16;
+                servoNumber = 14;
             }
             setServoRaw(servoNumber, angle);
             servoTarget[servoNumber] = angle;
@@ -180,7 +180,7 @@ namespace BBS_Motor_Controller {
         {
             let servoNumber = 15;
             if(servo == Servos.Servo2){
-                servoNumber = 16;
+                servoNumber = 14;
             }
             let step = 1;
             let delay = 10; // 10ms delay between steps
@@ -222,7 +222,7 @@ namespace BBS_Motor_Controller {
         {
             let servoNumber = 15;
             if(servo == Servos.Servo2){
-                servoNumber = 16;
+                servoNumber = 14;
             }
 
             return servoActual[servoNumber];
@@ -239,7 +239,7 @@ namespace BBS_Motor_Controller {
         {
             let servoNumber = 15;
             if(servo == Servos.Servo2){
-                servoNumber = 16;
+                servoNumber = 14;
             }
             return servoTarget[servoNumber];
         }
@@ -255,7 +255,7 @@ namespace BBS_Motor_Controller {
         {
             let servoNumber = 15;
             if(servo == Servos.Servo2){
-                servoNumber = 16;
+                servoNumber = 14;
             }
             return servoTarget[servoNumber]==servoActual[servoNumber];
         }
@@ -271,7 +271,7 @@ namespace BBS_Motor_Controller {
         {
             let servoNumber = 15;
             if(servo == Servos.Servo2){
-                servoNumber = 16;
+                servoNumber = 14;
             }
 
             while (servoActual[servoNumber] != servoTarget[servoNumber]) // what if nothing is changing these values?
@@ -342,112 +342,107 @@ namespace BBS_Motor_Controller {
             let m1pwm = 0;
             
             if(Motor == Motors.Motor1){
-                m1pin1 = 0x08;
-                m1pin2 = 0x0C;
-                m1pwm = 0x10;
+                m1pin1 = 1;
+                m1pin2 = 2;
+                m1pwm = 3;
             }
 
             if(Motor == Motors.Motor2){
-                m1pin1 = 0x14;
-                m1pin2 = 0x18;
-                m1pwm = 0x1C;
+                m1pin1 = 4;
+                m1pin2 = 5;
+                m1pwm = 6;
             }
 
             if(Motor == Motors.Motor3){
-                m1pin1 = 0x20;
-                m1pin2 = 0x24;
-                m1pwm = 0x28;
+                m1pin1 = 7;
+                m1pin2 = 8;
+                m1pwm = 9;
             }
 
             if(Motor == Motors.Motor4){
-                m1pin1 = 0x2C;
-                m1pin2 = 0x30;
-                m1pwm = 0x34;
+                m1pin1 = 10;
+                m1pin2 = 11;
+                m1pwm = 12;
             }
             
-            let buf = pins.createBuffer(2);
-            let bufPin1 = pins.createBuffer(2);
-            let bufPin2 = pins.createBuffer(2);
-
-            let HighByte = false;
+            let i2cData = pins.createBuffer(2);
             
             //power up pin 1 and 2
             if(speed > 0)
             {
-                //forward
-                bufPin1[0] = m1pin1;
-                bufPin1[1] = 0xFF; //full on to simulate a logic on
-                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)            
-                bufPin1[0] = m1pin1 + 1
-                bufPin1[1] = 0x00
-                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)
+                //forward - on
+                i2cData[0] = SERVOS + m1pin1*4 + 2;	// Servo register
+                i2cData[1] = (4096 & 0xff);		// low byte stop
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
-                bufPin2[0] = m1pin2;
-                bufPin2[1] = 0; //off - 
-                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)            
-                bufPin2[0] = m1pin2 + 1
-                bufPin2[1] = 0x00
-                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)
+                i2cData[0] = SERVOS + m1pin1*4 + 3;	// Servo register
+                i2cData[1] = (4096 >> 8);		// high byte stop
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
+                //forward - off
+                i2cData[0] = SERVOS + m1pin2*4 + 2;	// Servo register
+                i2cData[1] = (0 & 0xff);		// low byte stop
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+                i2cData[0] = SERVOS + m1pin2*4 + 3;	// Servo register
+                i2cData[1] = (0 >> 8);		// high byte stop
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+                
 
             }
             else if (speed < 0)
             {
-                //reverse
+                
+                //forward - off
+                i2cData[0] = SERVOS + m1pin1*4 + 2;	// 
+                i2cData[1] = (0 & 0xff);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
-                bufPin1[0] = m1pin1;
-                bufPin1[1] = 0; //full off
-                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)            
-                bufPin1[0] = m1pin1 + 1
-                bufPin1[1] = 0x00
-                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)
+                i2cData[0] = SERVOS + m1pin1*4 + 3;	// 
+                i2cData[1] = (0 >> 8);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
-                bufPin2[0] = m1pin2;
-                bufPin2[1] = 0xFF; //on
-                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)            
-                bufPin2[0] = m1pin2 + 1
-                bufPin2[1] = 0x00
-                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)
+                //forward - on
+                i2cData[0] = SERVOS + m1pin2*4 + 2;	// 
+                i2cData[1] = (4096 & 0xff);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+                i2cData[0] = SERVOS + m1pin2*4 + 3;	// 
+                i2cData[1] = (4096) >> 8);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+                
             }
             else
             {
                 //stop
-                bufPin1[0] = m1pin1;
-                bufPin1[1] = 0xFF; //full off
-                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)            
-                bufPin1[0] = m1pin1 + 1
-                bufPin1[1] = 0x00
-                pins.i2cWriteBuffer(ChipAddress, bufPin1, false)
+                i2cData[0] = SERVOS + m1pin1*4 + 2;	// 
+                i2cData[1] = (4096 & 0xff);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
 
-                bufPin2[0] = m1pin2;
-                bufPin2[1] = 0xFF; //on
-                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)            
-                bufPin2[0] = m1pin2 + 1
-                bufPin2[1] = 0x00
-                pins.i2cWriteBuffer(ChipAddress, bufPin2, false)
+                i2cData[0] = SERVOS + m1pin1*4 + 3;	// 
+                i2cData[1] = (4096 >> 8);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+                //forward - on
+                i2cData[0] = SERVOS + m1pin2*4 + 2;	// 
+                i2cData[1] = (4096 & 0xff);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+                i2cData[0] = SERVOS + m1pin2*4 + 3;	// 
+                i2cData[1] = (4096) >> 8);		// 
+                pins.i2cWriteBuffer(ChipAddress, i2cData, false);
             }
 
-            let deg100 = speed * 100
-            let PWMVal100 = deg100 * ServoMultiplier
-            let PWMVal = PWMVal100 / 10000
-            PWMVal = Math.floor(PWMVal)
-            PWMVal = PWMVal + ServoZeroOffset
             
-            if (PWMVal > 0xFF) {
-                HighByte = true
-            }
-            buf[0] = m1pwm
-            buf[1] = PWMVal
-            pins.i2cWriteBuffer(ChipAddress, buf, false)
-            if (HighByte) {
-                buf[0] = m1pwm + 1
-                buf[1] = 0x01
-            }
-            else {
-                buf[0] = m1pwm + 1
-                buf[1] = 0x00
-            }
-            pins.i2cWriteBuffer(ChipAddress, buf, false)
+            //pwm pin
+
+            i2cData[0] = SERVOS + m1pin1*4 + 2;	// 
+            i2cData[1] = (speed & 0xff);		// 
+            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
+
+            i2cData[0] = SERVOS + m1pin1*4 + 3;	// 
+            i2cData[1] = (speed >> 8);		// 
+            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
         }
         
         
