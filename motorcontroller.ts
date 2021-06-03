@@ -113,6 +113,7 @@ namespace BBS_Motor_Controller {
          */
         //% blockId="centreServos"
         //% block="centre all servos"
+        //% subcategory=Servos
         export function centreServos(): void
         {
            
@@ -128,6 +129,7 @@ namespace BBS_Motor_Controller {
         //% blockId="an_setServo" block="set servo %servo| to angle %angle"
         //% weight=70
         //% angle.min=-90 angle.max.max=90
+        //% subcategory=Servos
         export function setServo(servo: Servos, angle: number): void
         {
             let servoNumber = 15;
@@ -217,7 +219,7 @@ namespace BBS_Motor_Controller {
          */
         //% blockId="getServoActual" block="servo %servo| actual position"
         //% weight=10
-    
+        //% subcategory=Servos
         export function getServoActual(servo: Servos): number
         {
             let servoNumber = 15;
@@ -234,7 +236,7 @@ namespace BBS_Motor_Controller {
          */
         //% blockId="getServoTarget" block="servo %servo| target position"
         //% weight=8
-        
+        //% subcategory=Servos
         export function getServoTarget(servo: Servos): number
         {
             let servoNumber = 15;
@@ -329,7 +331,7 @@ namespace BBS_Motor_Controller {
          */
         //% blockId=bbs_I2Cmotor_write
         //% block="set%Motor|to%speed"
-        //% speed.min=-100 speed.max=100
+        //% speed.min=-100 speed.max=4096
         
         export function MotorWrite(Motor: Motors, speed: number): void {
             if (initalised == false) {
