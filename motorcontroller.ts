@@ -318,6 +318,26 @@ namespace BBS_Motor_Controller {
 
             
             }
+
+             //enable pins on.
+
+             buf[0] = SERVOS + 12*4 + 2;	// 
+             buf[1] = (4096 & 0xff);		// 
+             pins.i2cWriteBuffer(ChipAddress, buf, false);
+ 
+             buf[0] = SERVOS + 12*4 + 3;	// 
+             buf[1] = (4096 >> 8);		// 
+             pins.i2cWriteBuffer(ChipAddress, buf, false);
+ 
+ 
+             buf[0] = SERVOS + 13*4 + 2;	// 
+             buf[1] = (4096 & 0xff);		// 
+             pins.i2cWriteBuffer(ChipAddress, buf, false);
+ 
+             buf[0] = SERVOS + 13*4 + 3;	// 
+             buf[1] = (4096 >> 8);		// 
+             pins.i2cWriteBuffer(ChipAddress, buf, false);
+
             //set the initalised flag so we dont come in here again automatically
             initalised = true
         }
@@ -435,27 +455,6 @@ namespace BBS_Motor_Controller {
                 pins.i2cWriteBuffer(ChipAddress, i2cData, false);
             }
 
-            //enable pins on.
-
-            i2cData[0] = SERVOS + 12*4 + 2;	// 
-            i2cData[1] = (4096 & 0xff);		// 
-            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
-
-            i2cData[0] = SERVOS + 12*4 + 3;	// 
-            i2cData[1] = (4096 >> 8);		// 
-            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
-
-
-            i2cData[0] = SERVOS + 13*4 + 2;	// 
-            i2cData[1] = (4096 & 0xff);		// 
-            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
-
-            i2cData[0] = SERVOS + 13*4 + 3;	// 
-            i2cData[1] = (4096 >> 8);		// 
-            pins.i2cWriteBuffer(ChipAddress, i2cData, false);
-
-
-            
             //pwm pin
 
             i2cData[0] = SERVOS + m1pwm*4 + 2;	// 
